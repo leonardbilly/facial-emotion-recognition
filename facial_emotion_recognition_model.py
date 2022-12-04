@@ -56,3 +56,19 @@ facial_emotion_recognition_model.add(Dense(7, activation='softmax'))
 
 facial_emotion_recognition_model.compile(loss='categorical_crossentropy', optimizer=Adam(
     learning_rate=0.0001, decay=1e-6), metrics=['accuracy'])
+
+# Training and saving model
+fer_model_info = facial_emotion_recognition_model.fit_generator(
+    train_generator,
+    steps_per_epoch=28709 // 64,
+    epochs=50,
+    validation_data=validation_generator,
+    validation_steps=7178 // 64
+)
+
+fer_model_json = facial_emotion_recognition_model.json()
+with open('facial_emotion_recognition_model.json', 'w') as json_file:
+    json_file.write(fer_model_json)
+
+facial_emotion_recognition_model.save_weights(
+    'facial_emotion_recognition_model.h5')
