@@ -1,4 +1,4 @@
-from keras.preprocessing import ImageDataGenerator
+from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPool2D, Dense, Dropout, Flatten
 from keras.optimizers import Adam
@@ -11,7 +11,7 @@ validation_data_path = 'dataset/validation/'
 test_data_generator = ImageDataGenerator(rescale=1.0/255.0)
 validation_data_generator = ImageDataGenerator(rescale=1.0/255.0)
 
-test_generator = train_data_generator.flow_from_directory(
+test_generator = test_data_generator.flow_from_directory(
     test_data_path,
     target_size=(48, 48),
     batch_size=64,
@@ -35,7 +35,7 @@ input_shape = (48, 48, 1)
 facial_emotion_recognition_model.add(Conv2D(32, kernel_size=(3, 3),
                                             activation='relu', input_shape=input_shape))
 facial_emotion_recognition_model.add(
-    Convo2D(64, kernel_size=(3, 3), activation='relu'))
+    Conv2D(64, kernel_size=(3, 3), activation='relu'))
 facial_emotion_recognition_model.add(MaxPool2D(pool_size=(2, 2)))
 facial_emotion_recognition_model.add(Dropout(0.25))
 
@@ -44,7 +44,7 @@ facial_emotion_recognition_model.add(Conv2D(128, kernel_size=(3, 3),
                                             activation='relu'))
 facial_emotion_recognition_model.add(MaxPool2D(pool_size=(2, 2)))
 facial_emotion_recognition_model.add(
-    Convo2D(128, kernel_size=(3, 3), activation='relu'))
+    Conv2D(128, kernel_size=(3, 3), activation='relu'))
 facial_emotion_recognition_model.add(MaxPool2D(pool_size=(2, 2)))
 facial_emotion_recognition_model.add(Dropout(0.25))
 
@@ -59,7 +59,7 @@ facial_emotion_recognition_model.compile(loss='categorical_crossentropy', optimi
 
 # Training and saving model
 fer_model_info = facial_emotion_recognition_model.fit_generator(
-    train_generator,
+    test_generator,
     steps_per_epoch=28709 // 64,
     epochs=50,
     validation_data=validation_generator,
