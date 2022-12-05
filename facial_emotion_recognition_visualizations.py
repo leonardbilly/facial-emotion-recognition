@@ -45,7 +45,8 @@ for image_index, image_file, emotion_label in image_files.itertuples():
 emotion_features_averages = calculate_emotion_feature_averages(train_data_dir)
 
 
-emotion_correlation_matrices = generate_emotion_correlation_matrices(
+emotion_correlation_matrices, plottable_correlations = generate_emotion_correlation_matrices(
     emotion_features_averages)
 print(emotion_features_averages)
 print(emotion_correlation_matrices)
+print(plottable_correlations)
