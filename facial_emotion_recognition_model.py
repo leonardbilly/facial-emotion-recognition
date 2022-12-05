@@ -1,6 +1,6 @@
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
-from keras.layers import Conv2D, MaxPool2D, Dense, Dropout, Flatten
+from keras.layers import Conv2D, BatchNormalization, MaxPool2D, Dense, Dropout, Flatten
 from keras.optimizers import Adam
 
 
@@ -8,7 +8,12 @@ test_data_path = 'dataset/train/'
 validation_data_path = 'dataset/validation/'
 
 # Image preprocessing
-test_data_generator = ImageDataGenerator(rescale=1.0/255.0)
+test_data_generator = ImageDataGenerator(rescale=1.0/255.0,
+                                         width_shift_range=0.1,
+                                         height_shift_range=0.1,
+                                         rotation_range=20,
+                                         horizontal_flip=True
+                                         )
 validation_data_generator = ImageDataGenerator(rescale=1.0/255.0)
 
 test_generator = test_data_generator.flow_from_directory(
@@ -16,7 +21,8 @@ test_generator = test_data_generator.flow_from_directory(
     target_size=(48, 48),
     batch_size=64,
     color_mode='grayscale',
-    class_mode='categorical'
+    class_mode='categorical',
+    shuffle=True
 )
 
 validation_generator = validation_data_generator.flow_from_directory(
@@ -24,7 +30,7 @@ validation_generator = validation_data_generator.flow_from_directory(
     target_size=(48, 48),
     batch_size=64,
     color_mode='grayscale',
-    class_mode='categorical'
+    class_mode='categorical',
 )
 
 # FER CNN
@@ -34,23 +40,28 @@ input_shape = (48, 48, 1)
 # Layer 1
 facial_emotion_recognition_model.add(Conv2D(32, kernel_size=(3, 3),
                                             activation='relu', input_shape=input_shape))
+facial_emotion_recognition_model.add(BatchNormalization())
 facial_emotion_recognition_model.add(
     Conv2D(64, kernel_size=(3, 3), activation='relu'))
+facial_emotion_recognition_model.add(BatchNormalization())
 facial_emotion_recognition_model.add(MaxPool2D(pool_size=(2, 2)))
 facial_emotion_recognition_model.add(Dropout(0.25))
 
 # Layer 2
 facial_emotion_recognition_model.add(Conv2D(128, kernel_size=(3, 3),
                                             activation='relu'))
+facial_emotion_recognition_model.add(BatchNormalization())
 facial_emotion_recognition_model.add(MaxPool2D(pool_size=(2, 2)))
 facial_emotion_recognition_model.add(
     Conv2D(128, kernel_size=(3, 3), activation='relu'))
+facial_emotion_recognition_model.add(BatchNormalization())
 facial_emotion_recognition_model.add(MaxPool2D(pool_size=(2, 2)))
 facial_emotion_recognition_model.add(Dropout(0.25))
 
 # Last layer
 facial_emotion_recognition_model.add(Flatten())
 facial_emotion_recognition_model.add(Dense(1024, activation='relu'))
+facial_emotion_recognition_model.add(BatchNormalization())
 facial_emotion_recognition_model.add(Dropout(0.5))
 facial_emotion_recognition_model.add(Dense(7, activation='softmax'))
 
@@ -66,7 +77,7 @@ fer_model_info = facial_emotion_recognition_model.fit_generator(
     validation_steps=7178 // 64
 )
 
-fer_model_json = facial_emotion_recognition_model.json()
+fer_model_json = facial_emotion_recognition_model.to_json()
 with open('facial_emotion_recognition_model.json', 'w') as json_file:
     json_file.write(fer_model_json)
 
