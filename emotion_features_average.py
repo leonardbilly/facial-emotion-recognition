@@ -1,8 +1,9 @@
 """
 Emotion feature average calculator that returns a dictionary containing an average of the gray scale pixel features extracted from the images in a particular emotion folder in the dataset.
+Dependencies: PIL.Image, os, numpy
 """
-from PIL import Image
 import os
+from PIL import Image
 import numpy as np
 
 
@@ -19,7 +20,7 @@ def calculate_emotion_feature_averages(folder):
             print(f'File: {image_file} --- Feature extraction complete')
         emotion_features_averages[image_folder] = np.mean(emotion_features)
         print(
-            f'Folder: {image_folder.upper()} --- Emotion features average calculated.\n\n')
+            f'Folder: {image_folder.upper()} --- Emotion features average calculated.\n')
         emotion_features = []
     print('Finished calculating emotion features averages.')
     return emotion_features_averages

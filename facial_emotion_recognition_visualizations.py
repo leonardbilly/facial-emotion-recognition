@@ -7,6 +7,9 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 from tensorflow.keras.utils import to_categorical
+from emotion_features_average import calculate_emotion_feature_averages
+from emotion_correlation_matrices import generate_emotion_correlation_matrices
+
 
 train_data_dir = './dataset/train'
 validation_data_dir = './dataset/validation'
@@ -39,35 +42,10 @@ for image_index, image_file, emotion_label in image_files.itertuples():
     img = load_img(image_file)
     img = np.array(img)'''
 
-
-# Get gray scale pixel values as features
-def extract_image_features(images):
-    features = []
-    for image_index, image_file, emotion_label in train_data_frame.itertuples():
-        image = Image.open(image_file)
-        feature = np.reshape(image, (48*48))
-        features.append(feature)
-    return features
-
-
-def calculate_emotion_feature_averages(folder):
-    emotion_features = []
-    emotion_features_averages = {}
-
-    for image_folder in os.listdir(folder):
-        for image_file_name in os.listdir(folder + '/' + image_folder):
-            image_file = os.path.join(folder, image_folder, image_file_name)
-            image = Image.open(image_file)
-            image_feature = np.reshape(image, (48*48))
-            emotion_features.append(image_feature)
-            print(f'File: {image_file} --- Feature extraction complete')
-        emotion_features_averages[image_folder] = np.mean(emotion_features)
-        print(
-            f'Folder: {image_folder.upper()} --- Emotion features average calculated.\n\n')
-        emotion_features = []
-    print('Finished calculating emotion features averages.')
-    return emotion_features_averages
-
-
 emotion_features_averages = calculate_emotion_feature_averages(train_data_dir)
+
+
+emotion_correlation_matrices = generate_emotion_correlation_matrices(
+    emotion_features_averages)
 print(emotion_features_averages)
+print(emotion_correlation_matrices)
