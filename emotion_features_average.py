@@ -23,4 +23,8 @@ def calculate_emotion_feature_averages(folder):
             f'Folder: {image_folder.upper()} --- Emotion features average calculated.\n')
         emotion_features = []
     print('Finished calculating emotion features averages.')
-    return emotion_features_averages
+
+    emotion_key_averages = sorted(emotion_features_averages)
+    sorted_averages = {
+        key: emotion_features_averages[key] for key in emotion_key_averages}
+    return sorted_averages
