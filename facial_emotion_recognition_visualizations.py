@@ -4,12 +4,13 @@ from PIL import Image
 import pandas as pd
 import numpy as np
 import os
+import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 from tensorflow.keras.utils import to_categorical
 from emotion_features_average import calculate_emotion_feature_averages
 from emotion_correlation_matrices import generate_emotion_correlation_matrices
-
+from emotion_heat_map import generate_emotion_heat_map
 
 train_data_dir = './dataset/train'
 validation_data_dir = './dataset/validation'
@@ -43,10 +44,8 @@ for image_index, image_file, emotion_label in image_files.itertuples():
     img = np.array(img)'''
 
 emotion_features_averages = calculate_emotion_feature_averages(train_data_dir)
-
-
 emotion_correlation_matrices, plottable_correlations = generate_emotion_correlation_matrices(
     emotion_features_averages)
-print(emotion_features_averages)
-print(emotion_correlation_matrices)
-print(plottable_correlations)
+
+generate_emotion_heat_map(
+    emotion_correlation_matrices, plottable_correlations)
