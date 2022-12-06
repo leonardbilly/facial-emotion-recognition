@@ -7,9 +7,9 @@ emotions = {0: "angry", 1: "disgust", 2: "fear",
             3: "happy", 4: "neutral", 5: "sad", 6: "surprise"}
 
 try:
-    model_json = open('models/facial_emotion_recognition_model.json', 'r')
+    json_file = open('models/facial_emotion_recognition_model.json', 'r')
     loaded_model_json = json_file.read()
-    model_json.close()
+    json_file.close()
     fer_model = model_from_json(loaded_model_json)
 
     fer_model.load_weights("models/facial_emotion_recognition_model.h5")
@@ -38,6 +38,12 @@ while True:
         cropped_image = np.expand_dims(np.expand_dims(
             cv2.resize(roi_gray_frame, (48, 48)), -1
         ), 0)
+
+        emotion_prediction = fer_model.predict(cropped_image)
+        emotion_label = int(np.argmax(emotion_prediction))
+        emotion_label_position = (x+5, y-15)
+        cv2.putText(frame, emotions[emotion_label], emotion_label_position,
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
 
     cv2.imshow('FACIAL EMOTION RECOGNITION', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
