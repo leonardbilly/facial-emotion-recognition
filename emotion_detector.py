@@ -1,9 +1,23 @@
 import cv2
 import numpy as np
+from keras.models import model_from_json
 
+
+emotions = {0: "angry", 1: "disgust", 2: "fear",
+            3: "happy", 4: "neutral", 5: "sad", 6: "surprise"}
+
+try:
+    model_json = open('models/facial_emotion_recognition_model.json', 'r')
+    loaded_model_json = json_file.read()
+    model_json.close()
+    fer_model = model_from_json(loaded_model_json)
+
+    fer_model.load_weights("models/facial_emotion_recognition_model.h5")
+    print('Successfully loaded model.')
+except:
+    print('Failed to load saved model.')
 
 video_footage = cv2.VideoCapture(0)
-
 while True:
     ret, frame = video_footage.read()
     frame = cv2.resize(frame, (1280, 720))
