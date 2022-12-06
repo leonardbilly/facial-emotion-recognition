@@ -1,3 +1,7 @@
+'''
+A Convoluted Neural Network designed to predict emotions in real time. The model is trained using image data from kaggle.com, model weights saved in models directory as h5 file, the model is saved in json format.
+Dependencies: keras and its dependencies.
+'''
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPool2D, Dense, Dropout, Flatten
